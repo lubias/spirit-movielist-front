@@ -1,9 +1,9 @@
-'use client'
+'use client';
 import { ProvidersService } from '@/api/ProvidersService';
 import CardProvider from '@/components/Atoms/CardProvider/CardProvider';
 import { configurationAtom } from '@/states/ConfigurationAtom';
 import { useAtom } from 'jotai';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 
 function WhereToSee() {
     const [providers, setProviders] = useState([]);
@@ -21,11 +21,11 @@ function WhereToSee() {
         } catch (error) {
             console.error("Erro ao realizar a busca.", error);
         }
-    }
+    };
 
     useEffect(() => {
-        handleGetProviders()
-    }, [])
+        handleGetProviders();
+    }, []);
 
     return (
         <div className='px-96 mb-20'>
@@ -34,13 +34,19 @@ function WhereToSee() {
                 Array.isArray(providers) && providers.length > 0 && (
                     <div className='grid grid-cols-8 gap-10'>
                         {providers.map((provider, index) => (
-                            <CardProvider key={index} src={`${configuration.base_url}${configuration.poster_sizes[3]}${provider.logo_path}`} name={provider.provider_name} />
+                            configuration ? (
+                                <CardProvider
+                                    key={index}
+                                    src={`${configuration.base_url}${configuration.poster_sizes[3]}${provider.logo_path}`}
+                                    name={provider.provider_name}
+                                />
+                            ) : null
                         ))}
                     </div>
                 )
             }
         </div>
-    )
+    );
 }
 
-export default WhereToSee
+export default WhereToSee;

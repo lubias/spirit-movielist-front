@@ -1,3 +1,4 @@
+'use client'
 import React from 'react'
 import HeroHome from '@/components/Organisms/HeroHome/HeroHome';
 import Header from '@/components/Organisms/Header/Header';
