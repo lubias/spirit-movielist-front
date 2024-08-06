@@ -28,7 +28,18 @@ module.exports = {
       },
       colors: {
         "green-45": "#408C75",
-      }
+      },
+      screens: {
+        'lg_1': { max: '1920px' },
+        'lg_2': { max: '1635px' },
+        'lg_3': { max: '1365px' },
+        'lg_4': { max: '1015px' },
+        'md_1': { max: '970px' },
+        'md_2': { max: '768px' },
+        'md_3': { max: '690px' },
+        'sm_1': { max: '520px' },
+        'sm_2': { max: '425px' },
+      },
     },
   },
   plugins: [],

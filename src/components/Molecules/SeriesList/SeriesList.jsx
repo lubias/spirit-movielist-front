@@ -11,6 +11,7 @@ function SeriesList() {
     const [seriesByGenre, setSeriesByGenre] = useState({});
     const [configuration] = useAtom(configurationAtom);
     const [genres] = useAtom(serieGenresAtom);
+    const [nCards, setNCards] = useState(6);
 
     const handleGetList = async (genre) => {
         try {
@@ -32,6 +33,30 @@ function SeriesList() {
         }
     }, [genres]);
 
+    useEffect(() => {
+        const updateVisibleCards = () => {
+            const width = window.innerWidth;
+            console.log(width)
+            if (width > 1920) {
+                setNCards(6);
+            } else if (width > 1635) {
+                setNCards(5);
+            } else if (width > 1365) {
+                setNCards(4);
+            } else if (width > 970) {
+                setNCards(3);
+            } else if (width > 520) {
+                setNCards(2);
+            } else {
+                setNCards(1);
+            }
+        };
+
+        updateVisibleCards();
+        window.addEventListener('resize', updateVisibleCards);
+        return () => window.removeEventListener('resize', updateVisibleCards);
+    }, []);
+
     return (
         <div>
             {
@@ -42,7 +67,7 @@ function SeriesList() {
                             .slice(0, 3)
                             .map((genre) => (
                                 <div key={genre.id} className='space-y-3'>
-                                    <div className='flex justify-between items-center'>
+                                    <div className='flex justify-between sm_1:justify-around items-center'>
                                         <h2 className='font-semibold text-2xl'>
                                             {genre.name}<span className='text-green-45 font-semibold'>.</span>
                                         </h2>
@@ -52,8 +77,8 @@ function SeriesList() {
                                         </div>
                                     </div>
                                     {seriesByGenre[genre.id] && (
-                                        <div className='flex justify-between items-center'>
-                                            {seriesByGenre[genre.id].slice(0, 6).map((serie, index) => (
+                                        <div className='flex justify-between sm_1:justify-center sm_2:flex-col items-center'>
+                                            {seriesByGenre[genre.id].slice(0, nCards).map((serie, index) => (
                                                 <CardSerie key={index} serie={serie} configuration={configuration} />
                                             ))}
                                         </div>
