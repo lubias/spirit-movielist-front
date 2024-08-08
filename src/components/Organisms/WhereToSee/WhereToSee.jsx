@@ -13,6 +13,7 @@ import 'swiper/css/pagination';
 function WhereToSee() {
     const [providers, setProviders] = useState([]);
     const [configuration] = useAtom(configurationAtom);
+    const [nSlides, setNSlides] = useState(4);
 
     const handleGetProviders = async () => {
         try {
@@ -32,13 +33,30 @@ function WhereToSee() {
         handleGetProviders();
     }, []);
 
+    useEffect(() => {
+        const updateVisibleCards = () => {
+            const width = window.innerWidth;
+            if (width >= 690) {
+                setNSlides(4);
+            } else if (width > 520) {
+                setNSlides(3);
+            } else {
+                setNSlides(1);
+            }
+        };
+
+        updateVisibleCards();
+        window.addEventListener('resize', updateVisibleCards);
+        return () => window.removeEventListener('resize', updateVisibleCards);
+    }, []);
+
     return (
-        <div className='px-96 lg_1:px-40 lg_4:px-20 mb-20 space-y-10'>
-            <h1 className='font-bold text-4xl'>Where to see<span className='text-green-45'>?</span></h1>
+        <div className='px-96 lg_1:px-40 lg_4:px-20 md_1:px-0 md_3:px-5 mb-20 space-y-10'>
+            <h1 className='font-bold text-4xl md_1:text-center'>Where to see<span className='text-green-45'>?</span></h1>
             {
                 Array.isArray(providers) && providers.length > 0 && (
                     <>
-                        <div className='flex flex-wrap gap-7 justify-center sm_1:hidden'>
+                        <div className='flex flex-wrap gap-7 justify-center md_1:hidden'>
                             {providers.map((provider, index) => (
                                 configuration && configuration.poster_sizes && configuration.poster_sizes.length > 3 ? (
                                     <CardProvider
@@ -49,7 +67,7 @@ function WhereToSee() {
                                 ) : null
                             ))}
                         </div>
-                        <div className='sm_1:flex justify-center hidden'>
+                        <div className='md_1:block hidden'>
                             <Swiper
                                 autoplay={{
                                     delay: 2500,
@@ -57,7 +75,9 @@ function WhereToSee() {
                                 }}
                                 centeredSlides={true}
                                 modules={[Autoplay]}
-                                className="mySwiper"
+                                loop={true}
+                                slidesPerView={nSlides}
+                                className="flex justify-center"
                             >
                                 {providers.map((provider, index) => (
                                     configuration && configuration.poster_sizes && configuration.poster_sizes.length > 3 ? (
@@ -65,11 +85,11 @@ function WhereToSee() {
                                             <CardProvider
                                                 src={`${configuration.base_url}${configuration.poster_sizes[3]}${provider.logo_path}`}
                                                 name={provider.provider_name}
+                                                carousel={true}
                                             />
                                         </SwiperSlide>
                                     ) : null
                                 ))}
-
                             </Swiper>
                         </div>
                     </>

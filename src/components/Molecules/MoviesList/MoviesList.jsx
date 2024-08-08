@@ -35,11 +35,8 @@ function MoviesList() {
 
     useEffect(() => {
         const updateVisibleCards = () => {
-            const width = window.innerWidth;
-            console.log(width)
-            if (width > 1920) {
-                setNCards(6);
-            } else if (width > 1635) {
+            const width = window.innerWidth;        
+            if (width > 1635) {
                 setNCards(5);
             } else if (width > 1365) {
                 setNCards(4);

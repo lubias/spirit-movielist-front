@@ -10,15 +10,12 @@ import React, { useEffect, useState } from 'react';
 function HomeContent() {
     const [genres] = useAtom(movieGenresAtom);
     const [serieGenres] = useAtom(serieGenresAtom);
-    const [nCards, setNCards] = useState(6)
+    const [nCards, setNCards] = useState(5)
 
     useEffect(() => {
         const updateVisibleCards = () => {
             const width = window.innerWidth;
-            console.log(width)
-            if (width > 1920) {
-                setNCards(6);
-            } else if (width > 1635) {
+            if (width > 1635) {
                 setNCards(5);
             } else if (width > 1365) {
                 setNCards(4);
@@ -43,7 +40,7 @@ function HomeContent() {
                 {Array.isArray(genres) && genres.length > 0 && (
                     <div className='flex justify-between sm_1:justify-center items-center'>
                         {genres
-                            .sort(() => Math.random() - 0.6)
+                            .sort(() => Math.random() - 0.5)
                             .slice(0, nCards)
                             .map((genre, index) => (
                                 <CardGenre key={index} genre={genre} />
@@ -57,7 +54,7 @@ function HomeContent() {
                 {Array.isArray(serieGenres) && serieGenres.length > 0 && (
                     <div className='flex justify-between sm_1:justify-center items-center'>
                         {serieGenres
-                            .sort(() => Math.random() - 0.6)
+                            .sort(() => Math.random() - 0.5)
                             .slice(0, nCards)
                             .map((genre, index) => (
                                 <CardGenre key={index} genre={genre} />
