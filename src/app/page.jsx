@@ -18,10 +18,6 @@ const page = () => {
   const [genres, setGenres] = useAtom(movieGenresAtom);
   const [serieGenres, setSerieGenres] = useAtom(serieGenresAtom);
 
-  if (!config) {
-    return <div>Loading...</div>;
-  }
-
   const handleGetConfiguration = async () => {
     try {
       const response = await ConfigurationService.get();

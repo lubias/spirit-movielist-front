@@ -1,41 +1,49 @@
-import axios from "axios";
+import { tmdbClient } from "./httpClient";
+
+const pickTrailer = (results = []) =>
+    results.find(video => video.site === 'YouTube' && video.type === 'Trailer' && video.official)
+    ?? results.find(video => video.site === 'YouTube' && video.type === 'Trailer')
+    ?? results.find(video => video.site === 'YouTube' && video.type === 'Teaser')
+    ?? null;
 
 export class moviesDetailsService {
-    static getImages(id) {
-        const options = {
-            url: 'https://api.themoviedb.org/3/movie/' + id + '/images',
-            method: 'GET',
-            headers: {
-                accept: 'application/json',
-                Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkMzFiNDM0MDI0OTgzZWNhNGM3ZjUzZmM5MTI1OGJhNSIsIm5iZiI6MTcyMTU4OTMyNC44MjAxMDcsInN1YiI6IjY2OTkyMDRiYTdkYmEyMzI4MjhhYzVjNSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.BH_VP1gjMrJEgjcO8v6pbO9BzsmD6uGxh2AdlpNjlRE'
-            }
-        }
-
-        return axios
-            .request(options)
-            .then(response => response.data)
-            .catch(error => {
-                console.error(error);
-                throw error;
-            });
+    static getImages(id, type = 'movie') {
+        return tmdbClient.get(`/${type}/${id}/images`);
     }
 
-    static getDetails(id) {
-        const options = {
-            url: 'https://api.themoviedb.org/3/movie/' + id + '?language=en-US',
-            method: 'GET',
-            headers: {
-                accept: 'application/json',
-                Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkMzFiNDM0MDI0OTgzZWNhNGM3ZjUzZmM5MTI1OGJhNSIsIm5iZiI6MTcyMTU4OTMyNC44MjAxMDcsInN1YiI6IjY2OTkyMDRiYTdkYmEyMzI4MjhhYzVjNSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.BH_VP1gjMrJEgjcO8v6pbO9BzsmD6uGxh2AdlpNjlRE'
-            }
-        }
+    static getDetails(id, type = 'movie') {
+        return tmdbClient.get(`/${type}/${id}`, {
+            params: { language: 'pt-BR' }
+        });
+    }
 
-        return axios
-            .request(options)
-            .then(response => response.data)
-            .catch(error => {
-                console.error(error);
-                throw error;
-            });
+    static getCredits(id, type = 'movie') {
+        return tmdbClient.get(`/${type}/${id}/credits`, {
+            params: { language: 'pt-BR' }
+        });
+    }
+
+    static async getTrailer(id, type = 'movie') {
+        const ptBR = await tmdbClient.get(`/${type}/${id}/videos`, {
+            params: { language: 'pt-BR' }
+        });
+        const trailer = pickTrailer(ptBR.results);
+        if (trailer) return trailer;
+
+        const enUS = await tmdbClient.get(`/${type}/${id}/videos`, {
+            params: { language: 'en-US' }
+        });
+        return pickTrailer(enUS.results);
+    }
+
+    static getRecommendations(id, type = 'movie') {
+        return tmdbClient.get(`/${type}/${id}/recommendations`, {
+            params: { language: 'pt-BR', page: 1 }
+        });
+    }
+
+    static async getWatchProviders(id, type = 'movie') {
+        const response = await tmdbClient.get(`/${type}/${id}/watch/providers`);
+        return response.results?.BR ?? null;
     }
 }

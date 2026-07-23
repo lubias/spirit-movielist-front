@@ -36,7 +36,7 @@ function HeroHome() {
             <div className='flex flex-col items-start mt-32 flex-1'>
                 <div className='flex items-center gap-2'>
                     <div className={`${isActive('now_playing') ? 'w-28 bg-green-45 h-[2px]' : 'bg-white w-14 h-px'}  `} />
-                    <button onClick={() => changeList("now_playing")} className={`${isActive('now_playing') ? 'font-semibold' : 'font-normal'}`}>Now Playing</button>
+                    <button onClick={() => changeList("now_playing")} className={`${isActive('now_playing') ? 'font-semibold' : 'font-normal'}`}>Em cartaz</button>
                 </div>
                 <div className='flex items-center gap-2'>
                     <div className={`${isActive('popular') ? 'w-28 bg-green-45 h-[2px]' : 'bg-white w-14 h-px'}`} />
@@ -44,20 +44,20 @@ function HeroHome() {
                 </div>
                 <div className='flex items-center gap-2'>
                     <div className={`${isActive('top_rated') ? 'w-28 bg-green-45 h-[2px]' : 'bg-white w-14 h-px'}`} />
-                    <button onClick={() => changeList("top_rated")} className={`${isActive('top_rated') ? 'font-semibold' : 'font-normal'}`}>Top Rated</button>
+                    <button onClick={() => changeList("top_rated")} className={`${isActive('top_rated') ? 'font-semibold' : 'font-normal'}`}>Mais bem avaliados</button>
                 </div>
                 <div className='flex items-center gap-2'>
                     <div className={`${isActive('upcoming') ? 'w-28 bg-green-45 h-[2px]' : 'bg-white w-14 h-px'}`} />
-                    <button onClick={() => changeList("upcoming")} className={`${isActive('upcoming') ? 'font-semibold' : 'font-normal'}`}>Upcoming</button>
+                    <button onClick={() => changeList("upcoming")} className={`${isActive('upcoming') ? 'font-semibold' : 'font-normal'}`}>Em breve</button>
                 </div>
             </div>
             <div className='h-px w-full bg-white/40 absolute bottom-24 z-0' />
             <div className='flex gap-5 overflow-hidden w-fit items-end pb-10 -ml-10 h-full'>
                 {list.map((film, index) => (
                     configuration?.base_url && configuration?.poster_sizes?.[1] ? (
-                        <img key={index} src={`${configuration.base_url}${configuration.poster_sizes[1]}${film.poster_path}`} alt={`Poster of ${film.title}`} className='z-50 hover:scale-110 hover:duration-300' />
+                        <img key={index} src={`${configuration.base_url}${configuration.poster_sizes[1]}${film.poster_path}`} alt={`Pôster de ${film.title}`} className='z-50 hover:scale-110 hover:duration-300' />
                     ) : (
-                        <div key={index}>Loading...</div>
+                        <div key={index}>Carregando...</div>
                     )
                 ))}
             </div>

@@ -1,10 +1,10 @@
 import Link from 'next/link'
 import React from 'react'
 
-function CardGenre({ genre }) {
+function CardGenre({ genre, type = 'movie' }) {
     return (
         <Link
-            href={`/genres/${genre.id}`}
+            href={`/genre/${type}/${genre.id}`}
             className="sm_1:w-80 hover:animate-background rounded-xl bg-gradient-to-r from-green-300 via-blue-500 to-purple-600 p-0.5 shadow-xl transition hover:bg-[length:400%_400%] hover:shadow-sm hover:[animation-duration:_4s]"
         >
             <div className="w-60 sm_1:w-full rounded-lg bg-black-06 p-4 !pt-20 sm:p-6">

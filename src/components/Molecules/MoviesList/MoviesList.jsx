@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { listsMoviesServices } from '@/api/ListsMoviesService';
 import CardMovie from '@/components/Atoms/CardMovie/CardMovie';
 import { configurationAtom } from '@/states/ConfigurationAtom';
@@ -12,6 +12,11 @@ function MoviesList() {
     const [configuration] = useAtom(configurationAtom);
     const [genres] = useAtom(movieGenresAtom);
     const [nCards, setNCards] = useState(6);
+
+    const selectedGenres = useMemo(
+        () => Array.isArray(genres) ? [...genres].sort(() => Math.random() - 0.5).slice(0, 3) : [],
+        [genres]
+    );
 
     const handleGetList = async (genre) => {
         try {
@@ -26,12 +31,10 @@ function MoviesList() {
     };
 
     useEffect(() => {
-        if (genres && genres.length > 0) {
-            genres.forEach(genre => {
-                handleGetList(genre);
-            });
-        }
-    }, [genres]);
+        selectedGenres.forEach(genre => {
+            handleGetList(genre);
+        });
+    }, [selectedGenres]);
 
     useEffect(() => {
         const updateVisibleCards = () => {
@@ -57,11 +60,9 @@ function MoviesList() {
     return (
         <div>
             {
-                Array.isArray(genres) && genres.length > 0 && (
+                selectedGenres.length > 0 && (
                     <div className='space-y-14'>
-                        {genres
-                            .sort(() => Math.random() - 0.3)
-                            .slice(0, 3)
+                        {selectedGenres
                             .map((genre) => (
                                 <div key={genre.id} className='space-y-3'>
                                     <div className='flex justify-between sm_1:justify-around items-center'>
@@ -69,7 +70,7 @@ function MoviesList() {
                                             {genre.name}<span className='text-green-45 font-semibold'>.</span>
                                         </h2>
                                         <div className='flex items-center gap-1'>
-                                            <Link href={`/genre/${genre.id}`}>Ver mais</Link>
+                                            <Link href={`/genre/movie/${genre.id}`}>Ver mais</Link>
                                             <img src='/icons/arrowRight.svg' className='h-4' />
                                         </div>
                                     </div>

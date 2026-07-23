@@ -12,17 +12,18 @@ const isEmptyObject = (obj) => {
     return Object.keys(obj).length === 0 && obj.constructor === Object;
 };
 
-function MovieDetails({ id }) {
+function MovieDetails({ id, type = 'movie' }) {
     const [configuration, setConfiguration] = useAtom(configurationAtom);
     const [imageBackground, setImageBackground] = useState('');
     const [imagePoster, setImagePoster] = useState('');
-    const [details, setDetails] = useState([]);
+    const [details, setDetails] = useState(null);
+    const [trailer, setTrailer] = useState(null);
 
     const handleGetImages = async () => {
         try {
-            const response = await moviesDetailsService.getImages(id);
-            setImageBackground(response.backdrops[1].file_path);
-            setImagePoster(response.posters[1].file_path);
+            const response = await moviesDetailsService.getImages(id, type);
+            setImageBackground(response.backdrops?.[0]?.file_path ?? '');
+            setImagePoster(response.posters?.[0]?.file_path ?? '');
         } catch (error) {
             console.error("Erro ao realizar a busca.", error);
         }
@@ -30,9 +31,8 @@ function MovieDetails({ id }) {
 
     const handleGetDetails = async () => {
         try {
-            const response = await moviesDetailsService.getDetails(id);
+            const response = await moviesDetailsService.getDetails(id, type);
             setDetails(response);
-            console.log(response)
         } catch (error) {
             console.error("Erro ao realizar a busca.", error);
         }
@@ -53,11 +53,15 @@ function MovieDetails({ id }) {
         } else {
             handleGetImages();
         }
-    }, [configuration]);
+    }, [configuration, id, type]);
 
     useEffect(() => {
         handleGetDetails();
-    }, []);
+        setTrailer(null);
+        moviesDetailsService.getTrailer(id, type)
+            .then(setTrailer)
+            .catch(error => console.error("Erro ao buscar trailer.", error));
+    }, [id, type]);
 
     return (
         <div className='bg-black-08 space-y-20'>
@@ -72,10 +76,18 @@ function MovieDetails({ id }) {
                         configuration={configuration}
                         image={imagePoster}
                         details={details}
+                        type={type}
+                        trailer={trailer}
                     />
                 </div>
             }
-            <MovieDetailsContent />
+            <MovieDetailsContent
+                id={id}
+                type={type}
+                configuration={configuration}
+                details={details}
+                trailer={trailer}
+            />
             <Footer />
         </div>
     )

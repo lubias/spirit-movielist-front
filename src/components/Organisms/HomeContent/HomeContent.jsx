@@ -5,12 +5,21 @@ import SeriesList from '@/components/Molecules/SeriesList/SeriesList';
 import { movieGenresAtom } from '@/states/MovieGenresAtom';
 import { serieGenresAtom } from '@/states/SerieGenresAtom';
 import { useAtom } from 'jotai';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 function HomeContent() {
     const [genres] = useAtom(movieGenresAtom);
     const [serieGenres] = useAtom(serieGenresAtom);
     const [nCards, setNCards] = useState(5)
+
+    const shuffledGenres = useMemo(
+        () => Array.isArray(genres) ? [...genres].sort(() => Math.random() - 0.5) : [],
+        [genres]
+    );
+    const shuffledSerieGenres = useMemo(
+        () => Array.isArray(serieGenres) ? [...serieGenres].sort(() => Math.random() - 0.5) : [],
+        [serieGenres]
+    );
 
     useEffect(() => {
         const updateVisibleCards = () => {
@@ -35,29 +44,27 @@ function HomeContent() {
 
     return (
         <div className='px-96 lg_1:px-40 lg_4:px-20 md_3:px-5 py-5 space-y-14'>
-            <div className='space-y-3'>
-                <h1 className='font-bold text-4xl sm_1:text-center'>Movies</h1>
-                {Array.isArray(genres) && genres.length > 0 && (
+            <div id='movies' className='space-y-3'>
+                <h1 className='font-bold text-4xl sm_1:text-center'>Filmes</h1>
+                {shuffledGenres.length > 0 && (
                     <div className='flex justify-between sm_1:justify-center items-center'>
-                        {genres
-                            .sort(() => Math.random() - 0.5)
+                        {shuffledGenres
                             .slice(0, nCards)
                             .map((genre, index) => (
-                                <CardGenre key={index} genre={genre} />
+                                <CardGenre key={index} genre={genre} type="movie" />
                             ))}
                     </div>
                 )}
             </div>
             <MoviesList />
-            <div className='space-y-3'>
-                <h1 className='font-bold text-4xl sm_1:text-center'>Series</h1>
-                {Array.isArray(serieGenres) && serieGenres.length > 0 && (
+            <div id='series' className='space-y-3'>
+                <h1 className='font-bold text-4xl sm_1:text-center'>Séries</h1>
+                {shuffledSerieGenres.length > 0 && (
                     <div className='flex justify-between sm_1:justify-center items-center'>
-                        {serieGenres
-                            .sort(() => Math.random() - 0.5)
+                        {shuffledSerieGenres
                             .slice(0, nCards)
                             .map((genre, index) => (
-                                <CardGenre key={index} genre={genre} />
+                                <CardGenre key={index} genre={genre} type="tv" />
                             ))}
                     </div>
                 )}

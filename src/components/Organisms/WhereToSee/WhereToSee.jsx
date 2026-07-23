@@ -52,7 +52,7 @@ function WhereToSee() {
 
     return (
         <div className='px-96 lg_1:px-40 lg_4:px-20 md_1:px-0 md_3:px-5 mb-20 space-y-10'>
-            <h1 className='font-bold text-4xl md_1:text-center'>Where to see<span className='text-green-45'>?</span></h1>
+            <h1 className='font-bold text-4xl md_1:text-center'>Onde assistir<span className='text-green-45'>?</span></h1>
             {
                 Array.isArray(providers) && providers.length > 0 && (
                     <>
